@@ -9,9 +9,37 @@ use Illuminate\Http\Request;
 
 class MaterialController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $materials = Material::paginate(15);
+        $query = Material::query();
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where('name', 'like', "%{$search}%");
+        }
+
+        if ($request->filled('unit')) {
+            $query->where('unit', $request->unit);
+        }
+
+        if ($request->filled('price_from')) {
+            $query->where('price_per_unit', '>=', $request->price_from);
+        }
+
+        if ($request->filled('price_to')) {
+            $query->where('price_per_unit', '<=', $request->price_to);
+        }
+
+        if ($request->filled('stock_from')) {
+            $query->where('stock_quantity', '>=', $request->stock_from);
+        }
+
+        if ($request->filled('stock_to')) {
+            $query->where('stock_quantity', '<=', $request->stock_to);
+        }
+
+        $materials = $query->paginate(15)->withQueryString();
+
         return view('materials.index', compact('materials'));
     }
 

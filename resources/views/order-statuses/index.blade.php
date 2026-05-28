@@ -8,6 +8,28 @@
     <a href="{{ route('admin.order-statuses.create') }}" class="btn btn-primary">+ Новый статус</a>
 </div>
 
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="GET" action="{{ route('admin.order-statuses.index') }}" class="row g-3">
+            <div class="col-md-8">
+                <label class="form-label">Поиск</label>
+                <input
+                    type="text"
+                    name="search"
+                    class="form-control"
+                    placeholder="Название статуса"
+                    value="{{ request('search') }}"
+                >
+            </div>
+
+            <div class="col-md-4 d-flex align-items-end gap-2">
+                <button type="submit" class="btn btn-primary">Применить</button>
+                <a href="{{ route('admin.order-statuses.index') }}" class="btn btn-outline">Сбросить</a>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div class="card">
     <div class="card-body p-0">
         <table class="table table-hover mb-0">
@@ -38,18 +60,18 @@
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger" style="padding: 2px 8px; font-size: 11px; width: 100px; display: inline-block; text-align: center;" onclick="return confirm('Удалить статус?')">Удалить</button>
                         </form>
-                    </td
+                    </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="5" class="text-center py-4">Статусы заказов не найдены</td
+                    <td colspan="5" class="text-center py-4">Статусы заказов не найдены</td>
                 </tr>
                 @endforelse
             </tbody>
         </table>
     </div>
     <div class="card-body">
-        {{ $statuses->links() }}
+        {{ $statuses->appends(request()->query())->links() }}
     </div>
 </div>
 @endsection

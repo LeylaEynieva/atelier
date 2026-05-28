@@ -7,6 +7,53 @@
     <h1>Услуги</h1>
     <a href="{{ route('admin.services.create') }}" class="btn btn-primary">+ Новая услуга</a>
 </div>
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="GET" action="{{ route('admin.services.index') }}" class="row g-3">
+            <div class="col-md-5">
+                <label class="form-label">Поиск</label>
+                <input
+                    type="text"
+                    name="search"
+                    class="form-control"
+                    placeholder="По названию или описанию"
+                    value="{{ request('search') }}"
+                >
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Цена от</label>
+                <input
+                    type="number"
+                    name="price_from"
+                    class="form-control"
+                    placeholder="0"
+                    value="{{ request('price_from') }}"
+                    step="0.01"
+                    min="0"
+                >
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Цена до</label>
+                <input
+                    type="number"
+                    name="price_to"
+                    class="form-control"
+                    placeholder="—"
+                    value="{{ request('price_to') }}"
+                    step="0.01"
+                    min="0"
+                >
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">&nbsp;</label>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">Применить</button>
+                    <a href="{{ route('admin.services.index') }}" class="btn btn-outline">Сбросить</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 
 <div class="card">
     <div class="card-body">
@@ -21,7 +68,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($services as $service)
+                @forelse($services as $service)
                 <tr>
                     <td>{{ $service->id }}</td>
                     <td>{{ $service->name }}</td>
@@ -36,7 +83,11 @@
                         </form>
                     </td>
                 </tr>
-                @endforeach
+                @empty
+                <tr>
+                    <td colspan="5" class="text-center py-4">Услуги не найдены</td>
+                </tr>
+                @endforelse
             </tbody>
         </table>
         {{ $services->links() }}

@@ -8,9 +8,18 @@ use Illuminate\Http\Request;
 
 class PaymentStatusController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $statuses = PaymentStatus::paginate(15);
+        $query = PaymentStatus::query();
+
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        $statuses = $query->orderBy('id', 'desc')
+            ->paginate(15)
+            ->withQueryString();
+
         return view('payment-statuses.index', compact('statuses'));
     }
 

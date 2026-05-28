@@ -8,9 +8,18 @@ use Illuminate\Http\Request;
 
 class OrderStatusController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $statuses = OrderStatus::paginate(15);
+        $query = OrderStatus::query();
+
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        $statuses = $query->orderBy('sort_order', 'asc')
+            ->paginate(15)
+            ->withQueryString();
+
         return view('order-statuses.index', compact('statuses'));
     }
 
